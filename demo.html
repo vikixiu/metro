@@ -111,7 +111,7 @@ function drawLine(lineCanvas,metroObj){
 }
 
 $(document).ready(function(){
-	if(metroSH){
+	if(metroSH != {}){
 		console.log(metroSH);
 		for(var line in metroSH){
 			$('#lines').append('<canvas id="'+ metroSH[line].id + '"  width="2400" height="2400"></canvas>');
