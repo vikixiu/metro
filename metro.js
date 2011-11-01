@@ -94,8 +94,8 @@ $.ajax({
 	error: function(error){console.log(error)},
 	success: function(metro){
 		console.log('ajax success');
-		$(metro).find('l[slb=2]').each(function(i,e){
-	//	$(metro).find('l').each(function(i,e){
+		//$(metro).find('l[slb=2]').each(function(i,e){
+		$(metro).find('l').each(function(i,e){
 			stations = [];
 			$(e).find('p').each(function(j,p){
 				x = $(p).attr('x') - 0 + 900;
