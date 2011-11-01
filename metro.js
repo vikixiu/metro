@@ -21,7 +21,7 @@ $.ajax({
 		});
 		//console.log(sw.join(','));
 		metroSH = eval('({' + sw.join(',') + '})');
-		//console.log(metroSH);
+		console.log(metroSH);
 	}
 });
 
