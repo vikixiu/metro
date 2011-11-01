@@ -1,0 +1,192 @@
+<html >
+<head>
+<title>Metro demo</title>
+
+<!--<link rel="stylesheet" type="text/css" href="styles.css" />-->
+<style>
+#lines,#stations{width:2400px;height:2400px;}
+#lines canvas,#stations{position:absolute;}
+#stations .stationInfo,#stations .stationName{position:absolute;z-index:50;}
+.stationName{font-size:12px; color:#333}
+.stationInfo{width:12px; height:12px;cursor:pointer;}
+.stationInfo div{display:none}
+#line2-Canvas{}
+</style>
+</head>
+
+<body>
+<!--
+<div id="line2">
+	<canvas id="line2-Canvas"  width="2400" height="2400"></canvas>
+</div>
+-->
+<div id="metro"><div id="lines"><div id="stations"></div></div></div>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript" src="metro.js"></script>
+<script type="text/javascript">
+function drawStation(line,x,y,name){
+	//var lineContext = document.getElementById(line).getContext('2d');
+		
+		line.save();
+		line.beginPath();
+		line.arc(x,y,6,0,Math.PI*2,true);
+		line.closePath();
+		line.fillStyle='#fff';
+		line.fill();
+		line.lineWidth=2;
+		line.stroke();
+		line.restore();
+		
+}
+
+function setStationInfo(lineCanvas,name,x,y){
+	//var $div = $('#' + lineCanvas).parent('div');
+	var $div = $('#stations');
+	var Info = '<div>' + name + '</div>';	
+	var	stationName = '<div class="stationName" style="left:' + (x- name.length*6) + 'px; top:' + (y-24) + 'px">' + name +'</div>',
+		stationInfo = '<div class="stationInfo" style="left:' + (x-6) + 'px; top:' + (y-6) + 'px">' + Info +'</div>';
+	$div.append(stationName,stationInfo);
+}
+/*
+function drawLine(lineCanvas,metroObj){
+
+	var lineContext = document.getElementById(lineCanvas).getContext('2d'),
+	position,P;
+	
+	lineContext.strokeStyle= metroObj.color;
+	
+	
+	for(var i in metroObj.station){
+		position = metroObj.station[i].position;
+		var j= i-0+1;
+		
+		if(metroObj.station[j]){
+			var positionNext = metroObj.station[j].position;
+			lineContext.beginPath();
+			lineContext.moveTo(position.x,position.y);
+			
+			if(metroObj.station[j].rc == true){
+				var curve = {x:positionNext.x - position.x, y:positionNext.y - position.y};
+				
+				//left or right
+				if(curve.x > 0 && curve.y > 0){//right
+				//above or below
+					if(curve.y > curve.x){//
+						lineContext.quadraticCurveTo(position.x+curve.x,position.y,position.x+curve.x,position.y+curve.x);
+					}else{
+						lineContext.quadraticCurveTo(position.x,position.y+curve.y,position.x+curve.y,position.y+curve.y);
+					}
+				}
+				
+			}else{
+				//lineContext.quadraticCurveTo(1200,500,positionNext.x,positionNext.y);
+				
+			}
+			
+			lineContext.lineTo(positionNext.x,positionNext.y);
+			
+			lineContext.save();
+			lineContext.lineWidth=6;
+			lineContext.stroke();
+			lineContext.restore();
+		}
+		if(metroObj.station[i].st == true){
+			drawStation(lineContext,position.x,position.y,metroObj.station[i].name);
+			}
+		if(metroObj.station[i].slb == true){	
+			setStationInfo(lineCanvas,metroObj.station[i].name,position.x,position.y);
+		}	
+	}
+}*/
+
+
+function drawLine(lineCanvas,metroObj){
+
+	var lineContext = document.getElementById(lineCanvas).getContext('2d'),
+	position,P;
+	
+	lineContext.strokeStyle= metroObj.color;
+	lineContext.fillStyle= metroObj.color;
+	
+	
+	for(var i in metroObj.station){
+		position = metroObj.station[i].position;
+		var j= i-0+1;
+		
+		if(metroObj.station[j]){
+			var positionNext = metroObj.station[j].position;
+			lineContext.beginPath();
+			
+			if(metroObj.station[i].rc == true){
+				lineContext.moveTo(positionNext.x,positionNext.y);
+			}else{
+				lineContext.save();
+				lineContext.arc(position.x,position.y,0.2,0,Math.PI*2,true);
+				lineContext.fill();
+				lineContext.restore();
+			
+				lineContext.moveTo(position.x,position.y);}
+			
+			if(metroObj.station[j].rc == true){
+			
+				var n = j-0+1;
+				var curve = metroObj.station[n].position;
+				
+				lineContext.quadraticCurveTo(positionNext.x,positionNext.y,curve.x,curve.y);
+				//lineContext.moveTo(curve.x,curve.y);
+				//console.log(positionNext);			
+				//console.log(curve);			
+			}else{
+				//lineContext.quadraticCurveTo(1200,500,positionNext.x,positionNext.y);
+				lineContext.lineTo(positionNext.x,positionNext.y);
+			}
+			
+			
+			//lineContext.lineTo(positionNext.x,positionNext.y);
+			
+			lineContext.save();
+			lineContext.lineWidth=7;
+			lineContext.stroke();
+			lineContext.restore();
+		}
+		//drawStation(lineContext,position.x,position.y,metroObj.station[i].name);
+		if(metroObj.station[i].st == true){
+			drawStation(lineContext,position.x,position.y,metroObj.station[i].name);
+			}else{
+			
+			}
+		if(metroObj.station[i].slb == true){	
+			setStationInfo(lineCanvas,metroObj.station[i].name,position.x,position.y);
+		}	
+	}
+}
+
+$(document).ready(function(){
+	//var line2 = document.getElementById('line2-Canvas'),line2S = document.getElementById('line2-Station');
+	//var line2Ctext = line2.getContext('2d');
+	//var metro = eval('(' + metroStr + ')');
+	/*line2Ctext.save();
+	line2Ctext.beginPath();
+	line2Ctext.moveTo(metroStr.line2[0].info.x,metroStr.line2[0].info.y);
+	line2Ctext.lineTo(metroStr.line2[1].info.x,metroStr.line2[1].info.y);
+	line2Ctext.moveTo(50,100);
+	line2Ctext.lineTo(1000,100);
+	line2Ctext.lineTo(1200,300);
+	line2Ctext.lineTo(1200,450);
+	line2Ctext.quadraticCurveTo(1200,500,1250,500);
+	line2Ctext.lineTo(1200,500);
+	line2Ctext.strokeStyle='#0ab029';
+	line2Ctext.lineWidth=6;
+	line2Ctext.stroke();*/
+	for(var line in metroSH){
+		$('#lines').append('<canvas id="'+ metroSH[line].id + '"  width="2400" height="2400"></canvas>');
+		drawLine(metroSH[line].id,metroSH[line]);
+		
+	}
+		
+	$('.stationInfo').hover(function(){$(this).children('div').fadeIn()},function(){$(this).children('div').fadeOut()});
+})	
+</script>
+</body>
+</html>
