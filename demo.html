@@ -48,58 +48,6 @@ function setStationInfo(lineCanvas,name,x,y){
 		stationInfo = '<div class="stationInfo" style="left:' + (x-6) + 'px; top:' + (y-6) + 'px">' + Info +'</div>';
 	$div.append(stationName,stationInfo);
 }
-/*
-function drawLine(lineCanvas,metroObj){
-
-	var lineContext = document.getElementById(lineCanvas).getContext('2d'),
-	position,P;
-	
-	lineContext.strokeStyle= metroObj.color;
-	
-	
-	for(var i in metroObj.station){
-		position = metroObj.station[i].position;
-		var j= i-0+1;
-		
-		if(metroObj.station[j]){
-			var positionNext = metroObj.station[j].position;
-			lineContext.beginPath();
-			lineContext.moveTo(position.x,position.y);
-			
-			if(metroObj.station[j].rc == true){
-				var curve = {x:positionNext.x - position.x, y:positionNext.y - position.y};
-				
-				//left or right
-				if(curve.x > 0 && curve.y > 0){//right
-				//above or below
-					if(curve.y > curve.x){//
-						lineContext.quadraticCurveTo(position.x+curve.x,position.y,position.x+curve.x,position.y+curve.x);
-					}else{
-						lineContext.quadraticCurveTo(position.x,position.y+curve.y,position.x+curve.y,position.y+curve.y);
-					}
-				}
-				
-			}else{
-				//lineContext.quadraticCurveTo(1200,500,positionNext.x,positionNext.y);
-				
-			}
-			
-			lineContext.lineTo(positionNext.x,positionNext.y);
-			
-			lineContext.save();
-			lineContext.lineWidth=6;
-			lineContext.stroke();
-			lineContext.restore();
-		}
-		if(metroObj.station[i].st == true){
-			drawStation(lineContext,position.x,position.y,metroObj.station[i].name);
-			}
-		if(metroObj.station[i].slb == true){	
-			setStationInfo(lineCanvas,metroObj.station[i].name,position.x,position.y);
-		}	
-	}
-}*/
-
 
 function drawLine(lineCanvas,metroObj){
 
@@ -163,26 +111,14 @@ function drawLine(lineCanvas,metroObj){
 }
 
 $(document).ready(function(){
-	//var line2 = document.getElementById('line2-Canvas'),line2S = document.getElementById('line2-Station');
-	//var line2Ctext = line2.getContext('2d');
-	//var metro = eval('(' + metroStr + ')');
-	/*line2Ctext.save();
-	line2Ctext.beginPath();
-	line2Ctext.moveTo(metroStr.line2[0].info.x,metroStr.line2[0].info.y);
-	line2Ctext.lineTo(metroStr.line2[1].info.x,metroStr.line2[1].info.y);
-	line2Ctext.moveTo(50,100);
-	line2Ctext.lineTo(1000,100);
-	line2Ctext.lineTo(1200,300);
-	line2Ctext.lineTo(1200,450);
-	line2Ctext.quadraticCurveTo(1200,500,1250,500);
-	line2Ctext.lineTo(1200,500);
-	line2Ctext.strokeStyle='#0ab029';
-	line2Ctext.lineWidth=6;
-	line2Ctext.stroke();*/
-	for(var line in metroSH){
-		$('#lines').append('<canvas id="'+ metroSH[line].id + '"  width="2400" height="2400"></canvas>');
-		drawLine(metroSH[line].id,metroSH[line]);
-		
+	if(metroSH){
+		for(var line in metroSH){
+			$('#lines').append('<canvas id="'+ metroSH[line].id + '"  width="2400" height="2400"></canvas>');
+			drawLine(metroSH[line].id,metroSH[line]);
+			
+		}
+	}else{
+		console.log('can not find metroSH').
 	}
 		
 	$('.stationInfo').hover(function(){$(this).children('div').fadeIn()},function(){$(this).children('div').fadeOut()});

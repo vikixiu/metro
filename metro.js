@@ -4,6 +4,7 @@ $.ajax({
 	url: 'sw_shanghai.xml',
 	error: function(error){console.log(error)},
 	success: function(metro){
+		console.log('ajax success');
 		$(metro).find('l[slb=2]').each(function(i,e){
 	//	$(metro).find('l').each(function(i,e){
 			stations = [];
