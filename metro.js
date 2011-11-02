@@ -124,11 +124,11 @@ $.ajax({
 			y = $(e).attr('lby') - 0 + 700;
 			var id = 'line' + $(e).attr('slb');
 			//sw.push($(e).attr('lid') + ':{id:"' + id + '",name:"' + $(e).attr('lid') + '",nameposition:{x:' + x + ',y:' + y + '},loop:' + $(e).attr('loop') + ',color:"' + $(e).attr('lc').replace('0x','#') +'",station:{' + stations.join(',') + '}}');
-			sw.push('{id:"' + id + '",name:"' + $(e).attr('lid') + '",nameposition:{x:' + x + ',y:' + y + '},loop:' + $(e).attr('loop') + ',color:"' + $(e).attr('lc').replace('0x','#') +'",station:{' + stations.join(',') + '}}');
+			//sw.push('{id:"' + id + '",name:"' + $(e).attr('lid') + '",nameposition:{x:' + x + ',y:' + y + '},loop:' + $(e).attr('loop') + ',color:"' + $(e).attr('lc').replace('0x','#') +'",station:{' + stations.join(',') + '}}');
 			
 			$('#lines').append('<canvas id="line'+ $(e).attr('slb') + '"  width="2400" height="2400"></canvas>');
 			
-			metroSH = eval('(' + sw[i] + ')');
+			metroSH = eval('({id:"' + id + '",name:"' + $(e).attr('lid') + '",nameposition:{x:' + x + ',y:' + y + '},loop:' + $(e).attr('loop') + ',color:"' + $(e).attr('lc').replace('0x','#') +'",station:{' + stations.join(',') + '}})');
 			
 			drawLine(id,metroSH);
 			
