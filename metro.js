@@ -25,10 +25,13 @@ function setStationInfo(lineCanvas,name,x,y){
 function drawLine(lineCanvas,metroObj){
 
 	var lineContext = document.getElementById(lineCanvas).getContext('2d'),
-	position,P;
+	position,
+	P = metroObj.nameposition;
 	
 	lineContext.strokeStyle= metroObj.color;
 	lineContext.fillStyle= metroObj.color;
+	
+	$('#lines').append('<label class="lineName" style="color:' + metroObj.color + ';left:' + P.x +'px;top:' + P.y +'px">' + metroObj.name +'</label>');
 	
 	
 	for(var i in metroObj.station){
@@ -63,14 +66,24 @@ function drawLine(lineCanvas,metroObj){
 				lineContext.lineTo(positionNext.x,positionNext.y);
 			}
 			
-			
-			//lineContext.lineTo(positionNext.x,positionNext.y);
-			
 			lineContext.save();
 			lineContext.lineWidth=7;
 			lineContext.stroke();
 			lineContext.restore();
+			
+		}else{
+			if(metroObj.loop == true){
+				lineContext.lineTo(metroObj.station[0].position.x,metroObj.station[0].position.y);
+				lineContext.save();
+				lineContext.lineWidth=7;
+				lineContext.stroke();
+				lineContext.restore();
+				drawStation(lineContext,metroObj.station[0].position.x,metroObj.station[0].position.y,metroObj.station[0].name);
+			}
 		}
+		
+		
+			
 		//drawStation(lineContext,position.x,position.y,metroObj.station[i].name);
 		if(metroObj.station[i].st == true){
 			drawStation(lineContext,position.x,position.y,metroObj.station[i].name);
@@ -81,6 +94,8 @@ function drawLine(lineCanvas,metroObj){
 			setStationInfo(lineCanvas,metroObj.station[i].name,position.x,position.y);
 		}	
 	}
+	
+	
 }
 
 
@@ -93,7 +108,6 @@ $.ajax({
 	url: 'sw_shanghai.xml',
 	error: function(error){console.log(error)},
 	success: function(metro){
-		console.log('ajax success');
 		//$(metro).find('l[slb=2]').each(function(i,e){
 		$(metro).find('l').each(function(i,e){
 			stations = [];
@@ -102,20 +116,31 @@ $.ajax({
 				y = $(p).attr('y') - 0 + 700;
 				var slb = false;
 				if ($(p).attr('slb') == ''){slb = false;}else{slb = $(p).attr('slb');}
-				stations[j] = j + ':{name:"' + $(p).attr('sid') + '",position:{x:' + x + ',y:' + y + '},st:' + $(p).attr('st') + ',rc:' + $(p).attr('rc') + ',slb:' + slb + '}';
-				//console.log($(p).attr('slb'));
+				stations.push(j + ':{name:"' + $(p).attr('sid') + '",position:{x:' + x + ',y:' + y + '},st:' + $(p).attr('st') + ',rc:' + $(p).attr('rc') + ',slb:' + slb + '}');
+				
 			});
-			sw[i] = $(e).attr('lid') + ':{id:"line' + $(e).attr('slb') +'",color:"' + $(e).attr('lc').replace('0x','#') +'",station:{' + stations.join(',') + '}}';
-			//console.log(sw[i]);
+			
+			x = $(e).attr('lbx') - 0 + 900;
+			y = $(e).attr('lby') - 0 + 700;
+			var id = 'line' + $(e).attr('slb');
+			//sw.push($(e).attr('lid') + ':{id:"' + id + '",name:"' + $(e).attr('lid') + '",nameposition:{x:' + x + ',y:' + y + '},loop:' + $(e).attr('loop') + ',color:"' + $(e).attr('lc').replace('0x','#') +'",station:{' + stations.join(',') + '}}');
+			sw.push('{id:"' + id + '",name:"' + $(e).attr('lid') + '",nameposition:{x:' + x + ',y:' + y + '},loop:' + $(e).attr('loop') + ',color:"' + $(e).attr('lc').replace('0x','#') +'",station:{' + stations.join(',') + '}}');
+			
+			$('#lines').append('<canvas id="line'+ $(e).attr('slb') + '"  width="2400" height="2400"></canvas>');
+			
+			metroSH = eval('(' + sw[i] + ')');
+			
+			drawLine(id,metroSH);
+			
 		});
-		//console.log(sw.join(','));
-		metroSH = eval('({' + sw.join(',') + '})');
-		console.log(metroSH);
 		
+		//metroSH = eval('({' + sw.join(',') + '})');
+		
+		/*
 		for(var line in metroSH){
 			$('#lines').append('<canvas id="'+ metroSH[line].id + '"  width="2400" height="2400"></canvas>');
 			drawLine(metroSH[line].id,metroSH[line]);
-		}
+		}*/
 
 	}
 });
